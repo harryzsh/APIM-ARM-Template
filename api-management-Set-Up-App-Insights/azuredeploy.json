@@ -1,0 +1,148 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "publisherEmail": {
+      "type": "string",
+      "minLength": 1,
+      "metadata": {
+        "description": "The email address of the owner of the service"
+      }
+    },
+    "publisherName": {
+      "type": "string",
+      "minLength": 1,
+      "metadata": {
+        "description": "The name of the owner of the service"
+      }
+    },
+    "sku": {
+      "type": "string",
+      "allowedValues": [
+        "Developer",
+        "Standard",
+        "Premium"
+      ],
+      "defaultValue": "Developer",
+      "metadata": {
+        "description": "The pricing tier of this API Management service"
+      }
+    },
+    "skuCount": {
+      "type": "int",
+      "defaultValue": 1,
+      "metadata": {
+        "description": "The instance size of this API Management service."
+      }
+    },
+    "proxyCustomHostname": {
+      "type": "string",
+      "metadata": {
+        "description": "Proxy Custom hostname."
+      }
+    },
+    "proxyCustomHostnameBase64EncodedPfxCertificate": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Base-64 encoded SSL .pfx Certificate for proxy custom hostname."
+      }
+    },
+    "proxySSLCertificatePassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Proxy SSL certificate password."
+      }
+    },
+    "portalCustomHostname": {
+      "type": "string",
+      "metadata": {
+        "description": "Portal Custom hostname."
+      }
+    },
+    "portalCustomHostnameBase64EncodedPfxCertificate": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Base-64 encoded SSL .pfx Certificate for portal custom hostname."
+      }
+    },
+    "portalSSLCertificatePassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Portal SSL certificate password."
+      }
+    },
+    "virtualNetworkName": {
+      "type": "string",
+      "metadata": {
+        "description": "Virtual Network name"
+      }
+    },
+    "virtualNetworkAddressPrefix": {
+      "type": "string",
+      "defaultValue": "10.0.0.0/16",
+      "metadata": {
+        "description": "Address prefix"
+      }
+    },
+    "subnetPrefix": {
+      "type": "string",
+      "defaultValue": "10.0.0.0/24",
+      "metadata": {
+        "description": "Subnet Prefix"
+      }
+    },
+    "subnetName": {
+      "type": "string",
+      "metadata": {
+        "description": "Subnet Name"
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Location for all resources."
+      }
+    }
+  },
+  "resources": [
+    {
+		"name": "[concat(parameters('apiManagementServiceName'),'/applicationinsights')]",
+		  "type": "Microsoft.ApiManagement/service/diagnostics",
+		  "apiVersion": "2018-06-01-preview",
+		  "properties": {
+			"enabled": false,
+			"loggerId": "/loggers/harryappinsight",
+			"alwaysLog": "allErrors",
+			"sampling": {
+			  "samplingType": "fixed",
+			  "percentage": "95"
+			},
+			"frontend":{
+				"request":{
+					"body": {
+						"bytes": "1024"
+					}
+				},
+				"response":{
+					"body": {
+						"bytes": "1024"
+					}
+				}
+			},
+			"backend":{
+				"request":{
+					"body": {
+						"bytes": "1024"
+					}
+				},
+				"response":{
+					"body": {
+						"bytes": "1024"
+					}
+				}
+			}
+		 },
+	}
+  ]
+}
